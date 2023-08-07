@@ -1,4 +1,5 @@
 import {documentInternationalization} from '@sanity/document-internationalization'
+import {defineField} from 'sanity'
 
 export const localizationSetup = documentInternationalization({
 	supportedLanguages: [
@@ -16,4 +17,5 @@ export const localizationSetup = documentInternationalization({
 		},
 	],
 	schemaTypes: ['post'],
+	metadataFields: [defineField({name: 'slug', type: 'slug'})],
 })
