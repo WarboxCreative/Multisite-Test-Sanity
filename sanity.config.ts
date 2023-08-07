@@ -1,18 +1,5 @@
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemas'
+import {ProductionStructure} from './structure/production'
+import {StagingStructure} from './structure/staging'
 
-export default defineConfig({
-  name: 'default',
-  title: 'Multisite Test',
-
-  projectId: '20b9mieb',
-  dataset: 'production',
-
-  plugins: [deskTool(), visionTool()],
-
-  schema: {
-    types: schemaTypes,
-  },
-})
+export default defineConfig([ProductionStructure, StagingStructure])
