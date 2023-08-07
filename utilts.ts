@@ -1,4 +1,34 @@
 import {SlugValidationContext} from 'sanity'
+import {StructureBuilder} from 'sanity/desk'
+import {localizations, localizedDocuments} from './settings'
+
+// Exports
+export function generateLocalisedDocumentTypeListItem(
+	S: StructureBuilder,
+	schema: (typeof localizedDocuments)[number],
+	localization: (typeof localizations)[number]['id']
+) {
+	return S.documentTypeList(schema)
+		.title('Posts')
+		.filter(`_type == 'post' && language == '${localization}'`)
+}
+
+export function generateLocalizedDocumentTypeList(
+	S: StructureBuilder,
+	name: string,
+	schema: (typeof localizedDocuments)[number]
+) {
+	return S.list()
+		.title(name)
+		.items([
+			// Loop over all localizations and generate a list item for each
+			...localizations.map((localization) =>
+				S.listItem()
+					.title(localization.title)
+					.child(generateLocalisedDocumentTypeListItem(S, schema, localization.id))
+			),
+		])
+}
 
 export async function isUniqueOtherThanLanguage(slug: string, context: SlugValidationContext) {
 	const {document, getClient} = context
