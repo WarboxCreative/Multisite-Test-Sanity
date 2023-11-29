@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {isUniqueOtherThanLanguage} from '../../utilts'
 
 export default defineType({
 	name: 'post',
@@ -17,6 +18,7 @@ export default defineType({
 			options: {
 				source: 'title',
 				maxLength: 96,
+				isUnique: isUniqueOtherThanLanguage,
 			},
 		}),
 		defineField({

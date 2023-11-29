@@ -1,4 +1,4 @@
-import {SlugValidationContext} from 'sanity'
+import {SlugValidationContext, Template} from 'sanity'
 import {StructureBuilder} from 'sanity/desk'
 import {localizations, localizedDocuments} from './settings'
 
@@ -38,7 +38,6 @@ export async function isUniqueOtherThanLanguage(slug: string, context: SlugValid
 	}
 
 	const client = getClient({apiVersion: '2023-04-24'})
-
 	const id = document._id.replace(/^drafts\./, '')
 
 	const params = {
@@ -48,13 +47,28 @@ export async function isUniqueOtherThanLanguage(slug: string, context: SlugValid
 		slug,
 	}
 
-	const query = `!defined(*[
-	  !(_id in [$draft, $published]) &&
-	  slug.current == $slug &&
-	  language == $language
-	][0]._id)`
-
+	const query = `
+		!defined(
+		*[
+			!(_id in [$draft, $published]) &&
+			slug.current == $slug &&
+			language == $language
+			][0]._id
+		)
+	`
 	const result = await client.fetch(query, params)
 
 	return result
+}
+
+export function handleTemplateForSchemaLanguage(template: Template<any, any>, language: string) {
+	if (!['post'].includes(template.schemaType)) {
+		return true
+	}
+
+	if (template.schemaType === 'post' && template.value.language === language) {
+		return true
+	}
+
+	return false
 }
